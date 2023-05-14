@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/meta-web3/static/css/main.110f8df7.css",
+    "main.js": "/meta-web3/static/js/main.857d6299.js",
+    "index.html": "/meta-web3/index.html",
+    "main.110f8df7.css.map": "/meta-web3/static/css/main.110f8df7.css.map",
+    "main.857d6299.js.map": "/meta-web3/static/js/main.857d6299.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.110f8df7.css",
+    "static/js/main.857d6299.js"
+  ]
+}
