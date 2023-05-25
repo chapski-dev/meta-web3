@@ -2,6 +2,7 @@
   "name": "meta-mask-web3",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://gitname.github.io/meta-web3",
   "dependencies": {
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
@@ -9,12 +10,15 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.129",
     "@mui/material": "^5.12.3",
+    "@reduxjs/toolkit": "^1.9.5",
     "@uniswap/sdk": "^3.0.3",
     "ethers": "^6.3.0",
     "formik": "^2.2.9",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-currency-format": "^1.1.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.2",
     "typescript": "^4.9.5",
@@ -22,6 +26,8 @@
     "web3": "^1.9.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -50,12 +56,14 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
+    "@types/lodash.debounce": "^4.0.7",
     "@types/node": "^16.18.25",
     "@types/react": "^18.2.5",
-    "@types/react-dom": "^18.2.3",
     "@types/react-currency-format": "^1.0.0",
+    "@types/react-dom": "^18.2.3",
     "eslint": "^8.40.0",
     "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-simple-import-sort": "^10.0.0"
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "gh-pages": "^5.0.0"
   }
 }

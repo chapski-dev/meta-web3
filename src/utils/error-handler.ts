@@ -14,7 +14,7 @@ export const notifyError = (message: any = defaultMessageError) => {
   }
 
   toast.error(message, {
-    position: 'top-right',
+    position: 'top-left',
     autoClose: 3000,
     hideProgressBar: true,
     closeOnClick: true,
@@ -32,7 +32,7 @@ export const notifySuccess = (message: any = defaultMessageSuccess) => {
   }
 
   toast.success(message, {
-    position: 'top-right',
+    position: 'top-left',
     autoClose: 3000,
     hideProgressBar: true,
     closeOnClick: true,
@@ -50,7 +50,7 @@ export const notifyWarning = (message: any = defaultMessageWarning) => {
   }
 
   toast.warning(message, {
-    position: 'top-right',
+    position: 'top-left',
     autoClose: 3000,
     hideProgressBar: true,
     closeOnClick: true,

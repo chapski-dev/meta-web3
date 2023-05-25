@@ -1,68 +1,85 @@
 import './App.css';
 import { Meta } from './views';
-import React, { useState } from 'react';
-
-import Web3 from 'web3';
 import { Container } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import { Header } from './components/Header';
-import { handleCatchError } from './utils/error-handler';
+import Web3 from 'web3';
+import { useSelector } from 'react-redux';
+import * as commonSelector from './store/common/selectors';
+import { useEffect, useMemo, useState } from 'react';
+import { handleCatchError, notifyError, notifySuccess, notifyWarning } from './utils/error-handler';
+import debounce from 'lodash.debounce';
+
+const web3 = new Web3(window.ethereum);
+
+const checkNetwork = async (setIsSepoliaNetwork: (val: boolean) => void) => {
+  try {
+    const networkId = await web3.eth.net.getId();
+    console.log('networkId', networkId);
+
+    // Сеть Ethereum Sepolia имеет идентификатор 11155111
+    if (networkId !== 11155111) {
+      notifyError('Пользователь не подключен к сети Ethereum Sepolia.');
+      setIsSepoliaNetwork(false);
+    } else {
+      setIsSepoliaNetwork(true);
+    }
+  } catch (error) {
+    handleCatchError(error);
+    notifyError('Ошибка при проверке сети');
+  }
+};
+  // Подписка на изменение сети
+const subscribeToNetworkChanges = (setIsSepoliaNetwork: (val: boolean) => void) => {
+  window.ethereum.on('chainChanged', (chainId: any) => {
+    if (chainId === '0xaa36a7') {
+      notifySuccess('Пользователь переключился на сеть Ethereum Sepolia.');
+      setIsSepoliaNetwork(true);
+    } else {
+      notifyWarning('Пользователь переключился на другую сеть Ethereum.');
+      setIsSepoliaNetwork(false);
+    }
+  });
+};
 
 function App() {
-  const [account, setAccount] = useState('');
-  const [web3, setWeb3] = useState<Web3 | null>(null);
-  const [balance, setBalance] = useState('');
+  const account = useSelector(commonSelector.accountAddress);
+  const isAuth = !!account && !!web3;
+  const [isSepoliaNetwork, setIsSepoliaNetwork] = useState(false);
+    
+  // Вызов функции проверки сети
+  const checkWeb3Network = useMemo(
+    () =>
+      debounce(() => {
+        checkNetwork(setIsSepoliaNetwork);
+      }, 350),
+    [web3.eth.net] //eslint-disable-line
+  );
 
-  const loadBlockchainData = async () => {
-    if (window.ethereum) {
-      // Инициализируем Web3 с помощью MetaMask провайдера
-      const web3Obj = new Web3(window.ethereum);
+  // Вызов функции подписки на изменение сети
+  const subscribeToWeb3NetworkChanges = useMemo(
+    () =>
+      debounce(() => {
+        subscribeToNetworkChanges(setIsSepoliaNetwork);
+      }, 350),
+    [web3.eth.net] //eslint-disable-line
+  );
 
-      try {
-        // Запрашиваем у пользователя доступ к его аккаунту MetaMask
-        await window.ethereum.enable();
-        // Получаем адрес аккаунта пользователя
-        const accounts = await web3Obj.eth.getAccounts();
-        setAccount(accounts[0]);
-        setWeb3(web3Obj);
-        // Получаем баланс пользователя
-        const balanceAcc = await web3Obj.eth.getBalance(accounts[0]);
-        setBalance(balanceAcc);
-      } catch (error) {
-        handleCatchError(error);
-      }
-    }
-  };
-
-  const handleLogout = () => {
-    setAccount('');
-    setWeb3(null);
-    setBalance('');
-  };
+  useEffect(checkWeb3Network, []); //eslint-disable-line
+  useEffect(subscribeToWeb3NetworkChanges, []); //eslint-disable-line
 
   return (
     <>
       <div className="App">
-        <Header
-          isAuth={!!account && !!web3}
-          web3={web3}
-          loadBlockchainData={loadBlockchainData}
-          account={account}
-          balance={balance}
-          handleLogout={handleLogout}
+
+        <Header 
+          isSepoliaNetwork={isSepoliaNetwork}
         />
-        <Container maxWidth="sm">
-          
-          {(account && web3) && (
-            <>
-              <Meta 
-                web3={web3}
-                account={account}
-                balance={balance}
-              />
-            </>
-          )} 
-        </Container>
+        {(isAuth && isSepoliaNetwork) && (
+          <Container maxWidth="sm">
+            <Meta />
+          </Container>
+        )}
       </div>
       <ToastContainer />
     </>

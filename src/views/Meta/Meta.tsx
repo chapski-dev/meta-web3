@@ -5,26 +5,24 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Liquidity, Swap } from './components';
+import { useSelector } from 'react-redux';
+import * as commonSelector from '../../store/common/selectors';
 import Web3 from 'web3';
 
-interface IProps {
-  web3: Web3;
-  account: string;
-  balance: string;
-
-}
-export const Meta = ({
-  web3,
-  account,
-  balance,
-}:IProps) => {
+export const Meta = () => {
   const [value, setValue] = React.useState('1');
+  const web3 = new Web3(window.ethereum);
+
+  const account = useSelector(commonSelector.accountAddress);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    console.log('newValue', newValue);
-    
     setValue(newValue);
   };
+
+  if (!account && !web3) {
+    return null;
+  }
+  
   return (
     <>
       <TabContext value={value}>
@@ -37,21 +35,13 @@ export const Meta = ({
         <TabPanel
           value="1"
           children={(
-            <Swap
-              web3={web3}
-              account={account}
-              balance={balance}
-            />
+            <Swap />
           )}
         />
         <TabPanel
           value="2"
           children={(
-            <Liquidity
-              web3={web3}
-              account={account}
-              balance={balance}
-            />
+            <Liquidity />
           )}
         />
       </TabContext>
