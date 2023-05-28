@@ -124,7 +124,8 @@ export const Swap = () => {
 
   useEffect(() => {
     const handleInputAmountChange = async () => {
-      if (debouncedFrom === '0') {
+      if (!+debouncedFrom) {
+        setToAmount('');
         return;
       }
       setLoading(true);
@@ -175,12 +176,12 @@ export const Swap = () => {
     }
 
     setCurrencyFrom(value);
-    if (value === CurrencyEnum.TT_B) {
-      setCurrencyTo(CurrencyEnum.TT_A);
+    if (value === CurrencyEnum.tMATIC) {
+      setCurrencyTo(CurrencyEnum.tETH);
       setCurrencyToAddr(Token_A);
       setCurrencyFromAddr(Token_B);
-    } else if (value === CurrencyEnum.TT_A) {
-      setCurrencyTo(CurrencyEnum.TT_B);
+    } else if (value === CurrencyEnum.tETH) {
+      setCurrencyTo(CurrencyEnum.tMATIC);
       setCurrencyToAddr(Token_B);
       setCurrencyFromAddr(Token_A);
     }
@@ -192,12 +193,12 @@ export const Swap = () => {
       return;
     }
     setCurrencyTo(value);
-    if (value === CurrencyEnum.TT_B) {
-      setCurrencyFrom(CurrencyEnum.TT_A);
+    if (value === CurrencyEnum.tMATIC) {
+      setCurrencyFrom(CurrencyEnum.tETH);
       setCurrencyFromAddr(Token_A);
       setCurrencyToAddr(Token_B);
-    } else if (value === CurrencyEnum.TT_A) {
-      setCurrencyFrom(CurrencyEnum.TT_B);
+    } else if (value === CurrencyEnum.tETH) {
+      setCurrencyFrom(CurrencyEnum.tMATIC);
       setCurrencyFromAddr(Token_B);
       setCurrencyToAddr(Token_A);
     }

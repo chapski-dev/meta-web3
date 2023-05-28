@@ -6,8 +6,8 @@ import { SwapState } from './types.d';
 const initialState: SwapState = {
   fromAmount: '',
   toAmount: '',
-  currencyFrom: CurrencyEnum.TT_A,
-  currencyTo: CurrencyEnum.TT_B,
+  currencyFrom: CurrencyEnum.tETH,
+  currencyTo: CurrencyEnum.tMATIC,
   currencyFromAddr: Token_A,
   currencyToAddr: Token_B,
 };

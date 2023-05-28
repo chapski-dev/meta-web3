@@ -7,12 +7,13 @@ import { commonActions } from './index';
 
 const loadBlockchainData = () => async (dispatch: Dispatch) => {
   if (window.ethereum) {
+    const ethereum = window.ethereum;
     // Инициализируем Web3 с помощью MetaMask провайдера
-    const web3Obj = new Web3(window.ethereum);
+    const web3Obj = new Web3(ethereum);
 
     try {
       // Запрашиваем у пользователя доступ к его аккаунту MetaMask
-      await window.ethereum.enable();
+      await ethereum.enable();
       // Получаем адрес аккаунта пользователя
       const accounts = await web3Obj.eth.getAccounts();
       console.log('accounts', accounts);
@@ -27,13 +28,7 @@ const loadBlockchainData = () => async (dispatch: Dispatch) => {
   }
 };
 
-const handleLogout = () => async (dispatch: Dispatch) => {
-  dispatch(commonActions.setAccount(''));
-  dispatch(commonActions.setBalance(''));
-};
-
 export const useCommonActions = createActionsHook({
-  handleLogout,
   loadBlockchainData,
   ...commonActions,
 });

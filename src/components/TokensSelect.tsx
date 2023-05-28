@@ -19,8 +19,8 @@ export const TokensSelect = ({
         value={value}
         onChange={handleSelectChange}
       >
-        <MenuItem value={'TT_A'}>TT_A</MenuItem>
-        <MenuItem value={'TT_B'}>TT_B</MenuItem>
+        <MenuItem value={'tETH'}>tETH</MenuItem>
+        <MenuItem value={'tMATIC'}>tMATIC</MenuItem>
       </Select>
     </FormControl>
   ); 

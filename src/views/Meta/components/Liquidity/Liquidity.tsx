@@ -16,6 +16,7 @@ import { useLiquidityActions } from 'src/store/liquidity/actions';
 import routerABI from 'src/abi/UniswapV2Router02.sol/UniswapV2Router02.json';
 import UniswapV2PairABI from '../../../../abi/IUniswapV2Pair.sol/UniswapV2Pair.json';
 import { useCommonActions } from 'src/store/common/actions';
+import { useDebounce } from 'src/hooks';
 
 export const Liquidity = () => {
   const web3 = new Web3(window.ethereum);
@@ -50,12 +51,12 @@ export const Liquidity = () => {
     const value = val as CurrencyEnum;
 
     setCurrencyFrom(value);
-    if (value === CurrencyEnum.TT_B) {
-      setCurrencyTo('TT_A');
+    if (value === CurrencyEnum.tMATIC) {
+      setCurrencyTo('tETH');
       setCurrencyToAddr(Token_A);
       setCurrencyFromAddr(Token_B);
-    } else if (value === 'TT_A') {
-      setCurrencyTo(CurrencyEnum.TT_B);
+    } else if (value === 'tETH') {
+      setCurrencyTo(CurrencyEnum.tMATIC);
       setCurrencyToAddr(Token_B);
       setCurrencyFromAddr(Token_A);
     }
@@ -64,12 +65,12 @@ export const Liquidity = () => {
   const handleChangeCurrencyB = (val: string) => {
     const value = val as CurrencyEnum;
     setCurrencyTo(value);
-    if (value === CurrencyEnum.TT_B) {
-      setCurrencyFrom(CurrencyEnum.TT_A);
+    if (value === CurrencyEnum.tMATIC) {
+      setCurrencyFrom(CurrencyEnum.tETH);
       setCurrencyFromAddr(Token_A);
       setCurrencyToAddr(Token_B);
-    } else if (value === CurrencyEnum.TT_A) {
-      setCurrencyFrom(CurrencyEnum.TT_B);
+    } else if (value === CurrencyEnum.tETH) {
+      setCurrencyFrom(CurrencyEnum.tMATIC);
       setCurrencyFromAddr(Token_B);
       setCurrencyToAddr(Token_A);
     }
@@ -83,28 +84,39 @@ export const Liquidity = () => {
       });
   }, []);
 
+  const debouncedFrom = useDebounce<string>(fromAmount, 600);
+
   useEffect(() => {
     const getCurrencyVale = async () => {
-      const routerMeth: UniswapV2Router02 = routerContract.methods;
-      let reserveIn;
-      let reserveOut;
-      await pairContract.methods.getReserves().call((error: any, result: any[]) => {
-        if (error) {
-          handleCatchError(error);
-          return;
-        }
-        reserveIn = currencyFromAddr === Token_A ? result[0] : result[1];
-        reserveOut = currencyFromAddr === Token_A ? result[1] : result[0];
-      });
-      const amountAToWei = web3.utils.toWei(fromAmount);
-      // @ts-expect-error
-      const amountBToWei = await routerMeth.quote(amountAToWei, reserveIn, reserveOut).call();
-      setToAmount((Number(amountBToWei) / 10 ** 18).toFixed(6));
+      setLoading(true);
+      try {
+        const routerMeth: UniswapV2Router02 = routerContract.methods;
+        let reserveIn;
+        let reserveOut;
+        await pairContract.methods.getReserves().call((error: any, result: any[]) => {
+          if (error) {
+            handleCatchError(error);
+            return;
+          }
+          reserveIn = currencyFromAddr === Token_A ? result[0] : result[1];
+          reserveOut = currencyFromAddr === Token_A ? result[1] : result[0];
+        });
+        const amountAToWei = web3.utils.toWei(debouncedFrom);
+        // @ts-expect-error
+        const amountBToWei = await routerMeth.quote(amountAToWei, reserveIn, reserveOut).call();
+        setToAmount((Number(amountBToWei) / 10 ** 18).toFixed(6));
+      } catch (error) {
+        handleCatchError(error);
+      }
+      setLoading(false);
     };
-    if (fromAmount) {
+    
+    if (+debouncedFrom) {
       getCurrencyVale();
+    } else {
+      setToAmount('');
     }
-  }, [fromAmount, currencyFromAddr, currencyToAddr]);
+  }, [debouncedFrom, currencyFromAddr, currencyToAddr]);
   
   if (!web3 || !routerContract || !pairContract) {
     return null;

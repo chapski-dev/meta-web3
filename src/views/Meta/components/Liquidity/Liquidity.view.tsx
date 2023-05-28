@@ -38,11 +38,11 @@ export const LiquidityView: FC<ILiquidityViewProps> = ({
   setShowPoolLiqInfo,
   loading,
   fromAmount,
+  toAmount,
   setFromAmount,
   currencyFrom,
   handleChangeCurrencyA,
   handleChangeCurrencyB,
-  toAmount,
   currencyTo,
   showPoolLiqInfo,
   liquidityBalance,
@@ -234,7 +234,7 @@ const PoolInfoModal = ({
       <Card sx={{ p: '36px', bgcolor: '#E5E7EB' }} elevation={3}>
         <Typography
           variant="h6"
-          children="TT_A\TT_B"
+          children="tETH\tMATIC"
           mb={3}
         />
 
