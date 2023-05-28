@@ -113,7 +113,7 @@ function App() {
             isSepoliaNetwork={isSepoliaNetwork}
             changeNetworkAndConnect={changeNetworkAndConnect}
           />
-          <Container maxWidth="sm">
+          <Container maxWidth="sm" sx={{ height: '100%' }}>
             {isAuth ? (
               <Meta
                 isSepoliaNetwork={isSepoliaNetwork}
@@ -124,7 +124,7 @@ function App() {
                 <>
                   <Box
                     sx={{
-                      height: '100vh',
+                      height: '100%',
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
