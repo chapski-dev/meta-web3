@@ -187,7 +187,9 @@ const PoolInfoModal = ({
       const tokenBReserve = reserves[1];
 
       // Возвращаем общее количество токенов в пуле
-      setTvl(Number(web3.utils.fromWei(tokenAReserve + tokenBReserve, 'ether')).toFixed(1));
+      const result = parseFloat(web3.utils.fromWei(tokenAReserve, 'ether')) + parseFloat(web3.utils.fromWei(tokenBReserve, 'ether'));
+      
+      setTvl(result.toFixed(2));
     } catch (error) {
       handleCatchError(error);
     }
@@ -201,7 +203,9 @@ const PoolInfoModal = ({
       const tokenAReserve = activeReserves[0];
       const tokenBReserve = activeReserves[1];
 
-      setPoSAssets(Number(web3.utils.fromWei(tokenAReserve + tokenBReserve, 'tether')).toFixed(1));
+      const result = parseFloat(web3.utils.fromWei(tokenAReserve, 'ether')) + parseFloat(web3.utils.fromWei(tokenBReserve, 'ether'));
+
+      setActiveAssets(result.toFixed(2));
     } catch (error) {
       handleCatchError(error);
     }
@@ -215,7 +219,9 @@ const PoolInfoModal = ({
       const tokenAReserve = passiveReserves[0];
       const tokenBReserve = passiveReserves[1];
 
-      setActiveAssets(Number(web3.utils.fromWei(tokenAReserve + tokenBReserve, 'ether')).toFixed(1));
+      const result = parseFloat(web3.utils.fromWei(tokenAReserve, 'ether')) + parseFloat(web3.utils.fromWei(tokenBReserve, 'ether'));
+      
+      setPoSAssets(result.toFixed(2));
     } catch (error) {
       handleCatchError(error);
     }
