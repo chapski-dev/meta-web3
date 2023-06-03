@@ -72,8 +72,8 @@ export const Swap = () => {
           handleCatchError(error);
           return;
         }
-        reserveIn = result[0];
-        reserveOut = result[1];
+        reserveIn = currencyFromAddr === Token_A ? result[0] : result[1];
+        reserveOut = currencyFromAddr === Token_A ? result[1] : result[0];
       });
 
       // Количество токенов A для свопа
